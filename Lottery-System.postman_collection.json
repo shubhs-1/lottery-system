@@ -1,0 +1,180 @@
+{
+	"info": {
+		"_postman_id": "9718342b-68d7-4839-ba86-3eea685394e4",
+		"name": "Lottery System",
+		"description": "Lottery System Postman Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Participant Registration",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"johndoe11\",\n    \"firstname\": \"John1\",\n    \"lastname\": \"Doe1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"register"
+					]
+				},
+				"description": "User Registeration"
+			},
+			"response": []
+		},
+		{
+			"name": "Start Lottery by Lottery Name",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/lottery/startLottery?lotteryName=LotteryA",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"lottery",
+						"startLottery"
+					],
+					"query": [
+						{
+							"key": "lotteryName",
+							"value": "LotteryA"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Active Lotteries",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/lottery/activeLotteries",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"lottery",
+						"activeLotteries"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Submit Lottery Ticket by Lottery Id",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/lotteryBallot/submitLottery/44?username=johndoe",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"lotteryBallot",
+						"submitLottery",
+						"44"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "johndoe"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "End Lottery By Lottery Id",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/lottery/endLottery/44",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"lottery",
+						"endLottery",
+						"44"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Lottery Result by Lottery Id & Date",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/lottery/lotteryResult/1?date=2022-10-25",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"lottery",
+						"lotteryResult",
+						"1"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "2022-10-25"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "End Active Lotteries Scheduler",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/lottery/endActiveLotteries",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"lottery",
+						"endActiveLotteries"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

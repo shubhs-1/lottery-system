@@ -60,7 +60,7 @@ public class LotteryBallotServiceTest {
         Lottery lottery = lotteryService.startLotteryByName("lotteryA");
         createUser("doejohn");
 
-        LotteryBallot lotteryBallot = lotteryService.submitLotteryBallot(lottery.getId(), "doejohn");
+        LotteryBallot lotteryBallot = lotteryService.submitLotteryBallotSync(lottery.getId(), "doejohn");
         assertNotNull(lotteryBallot);
         assertNotNull(lotteryBallot.getId());
     }
@@ -70,8 +70,8 @@ public class LotteryBallotServiceTest {
         Lottery lottery = lotteryService.startLotteryByName("lotteryA");
         createUser("doejohn");
 
-        LotteryBallot lotteryBallot = lotteryService.submitLotteryBallot(lottery.getId(), "doejohn");
-        LotteryBallot lotteryBallot2 = lotteryService.submitLotteryBallot(lottery.getId(), "doejohn");
+        LotteryBallot lotteryBallot = lotteryService.submitLotteryBallotSync(lottery.getId(), "doejohn");
+        LotteryBallot lotteryBallot2 = lotteryService.submitLotteryBallotSync(lottery.getId(), "doejohn");
 
         assertNotNull(lotteryBallot);
         assertNotNull(lotteryBallot.getId());
@@ -82,13 +82,13 @@ public class LotteryBallotServiceTest {
     @Test(expected = DataNotFoundException.class)
     public void shouldThrowDataNotFoundExceptionWhenUsernameIsInvalid() throws SaveFailureException, DataNotFoundException, LotteryStatusException {
         Lottery lottery = lotteryService.startLotteryByName("lotteryA");
-        lotteryService.submitLotteryBallot(lottery.getId(), null);
+        lotteryService.submitLotteryBallotSync(lottery.getId(), null);
     }
 
     @Test(expected = DataNotFoundException.class)
     public void shouldThrowDataNotFoundExceptionWhenUsernameIsNotRegistered() throws SaveFailureException, DataNotFoundException, LotteryStatusException {
         Lottery lottery = lotteryService.startLotteryByName("lotteryA");
-        lotteryService.submitLotteryBallot(lottery.getId(), "test");
+        lotteryService.submitLotteryBallotSync(lottery.getId(), "test");
     }
 
     @Test(expected = LotteryStatusException.class)
@@ -96,7 +96,7 @@ public class LotteryBallotServiceTest {
         Lottery lottery = lotteryService.startLotteryByName("lotteryA");
         lotteryService.endLotteryAndSelectLotteryWinner(lottery.getId());
 
-        lotteryService.submitLotteryBallot(lottery.getId(), null);
+        lotteryService.submitLotteryBallotSync(lottery.getId(), null);
     }
 
     @Test
@@ -115,7 +115,7 @@ public class LotteryBallotServiceTest {
         for (int i = 0; i < NUM_THREADS; i++) {
             executor.submit(() -> {
                 try {
-                    lotteryService.submitLotteryBallot(lotteryId, "doejohn");
+                    lotteryService.submitLotteryBallotSync(lotteryId, "doejohn");
                 } catch (DataNotFoundException | LotteryStatusException e) {
                     e.printStackTrace();
                 }

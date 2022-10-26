@@ -67,5 +67,5 @@ public interface LotteryService {
      * @throws DataNotFoundException
      * @throws LotteryStatusException
      */
-    LotteryBallot submitLotteryBallot(Long lotteryId, String username) throws DataNotFoundException, LotteryStatusException;
+    LotteryBallot submitLotteryBallotSync(Long lotteryId, String username) throws DataNotFoundException, LotteryStatusException;
 }

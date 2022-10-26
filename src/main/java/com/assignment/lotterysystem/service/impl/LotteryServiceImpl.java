@@ -71,6 +71,7 @@ public class LotteryServiceImpl implements LotteryService {
         Long count = lotteryRepository.countByNameAndEndDateIsNull(lotteryName);
 
         if (count > 0) {
+            log.error("Active lottery already exists by name: {}", lotteryName);
             throw new SaveFailureException("Active lottery already exists by name: " + lotteryName);
         }
     }
@@ -85,8 +86,10 @@ public class LotteryServiceImpl implements LotteryService {
     public Lottery findByLotteryId(Long lotteryId) throws DataNotFoundException {
         Lottery lottery = lotteryRepository.findById(lotteryId);
         if (ObjectUtils.isEmpty(lottery)) {
+            log.error("Lottery not found for id: {}", lotteryId);
             throw new DataNotFoundException("Lottery not found for id: " + lotteryId);
         }
+        log.info("Successfully found lottery id: {}", lotteryId);
         return lottery;
     }
 
@@ -158,9 +161,10 @@ public class LotteryServiceImpl implements LotteryService {
         String endDate = lottery.getEndDate().toString();
 
         if(!date.equals(endDate)) {
+            log.error("Winning ballot not found for specified date: {}", date);
             throw new DataNotFoundException("Winning ballot not found for specified date: " + date);
         }
-
+        log.info("Successfully fetched lottery result for id: {} and date: {}", lotteryId, date);
         return new LotteryDto(endDate, winner);
     }
 
@@ -173,6 +177,7 @@ public class LotteryServiceImpl implements LotteryService {
     private void checkLotteryIsFinished(Long lotteryId) throws LotteryStatusException, DataNotFoundException {
         Lottery lottery = findByLotteryId(lotteryId);
         if (!ObjectUtils.isEmpty(lottery.getEndDate())) {
+            log.error("Lottery has been finished for id: {}", lottery.getId());
             throw new LotteryStatusException("Lottery has been finished for id: " + lottery.getId());
         }
     }
@@ -186,6 +191,7 @@ public class LotteryServiceImpl implements LotteryService {
     private void checkLotteryIsActive(Long lotteryId) throws LotteryStatusException, DataNotFoundException {
         Lottery lottery = findByLotteryId(lotteryId);
         if (ObjectUtils.isEmpty(lottery.getEndDate())) {
+            log.error("Lottery not yet finished for id: {}", lottery.getId());
             throw new LotteryStatusException("Lottery not yet finished for id: " + lotteryId);
         }
     }
@@ -199,7 +205,7 @@ public class LotteryServiceImpl implements LotteryService {
      * @throws LotteryStatusException
      */
     @Override
-    public synchronized LotteryBallot submitLotteryBallot(Long lotteryId, String username) throws DataNotFoundException, LotteryStatusException {
+    public synchronized LotteryBallot submitLotteryBallotSync(Long lotteryId, String username) throws DataNotFoundException, LotteryStatusException {
         checkLotteryIsFinished(lotteryId);
         validateUsername(username);
 
@@ -219,6 +225,7 @@ public class LotteryServiceImpl implements LotteryService {
      */
     private void validateUsername(String username) throws DataNotFoundException {
         if (ObjectUtils.isEmpty(username) || ObjectUtils.isEmpty(participantService.findParticipantByUsername(username))) {
+            log.error("Username not found: {}", username);
             throw new DataNotFoundException("Username not found: " + username);
         }
     }

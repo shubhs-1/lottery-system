@@ -36,14 +36,16 @@ public class LotteryBallotServiceImpl implements LotteryBallotService {
         Long count = lotteryBallotRepository.countLotteryBallotByLotteryId(lotteryId);
 
         if (count == 0) {
-            log.info("No participation found for id: {}", lotteryId);
+            log.error("No participation found for id: {}", lotteryId);
             return -1L;
         }
         long random = getRandom(count);
         LotteryBallot lotteryBallot = lotteryBallotRepository.findByLotteryNumberAndLotteryId(random, lotteryId);
         if (ObjectUtils.isEmpty(lotteryBallot)) {
+            log.error("Lottery ballot not found for lottery number: {}", random);
             throw new DataNotFoundException("Lottery ballot not found for lottery number: " + random);
         }
+        log.info("Successfully found lottery winner for id: {}", lotteryId);
         return lotteryBallot.getLotteryNumber();
     }
 

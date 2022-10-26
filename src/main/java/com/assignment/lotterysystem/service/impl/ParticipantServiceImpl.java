@@ -32,6 +32,7 @@ public class ParticipantServiceImpl implements ParticipantService {
     public Participant registerParticipant(ParticipantDto participantDto) throws UserAlreadyExistsException {
         Participant existingParticipant = findParticipantByUsername(participantDto.getUsername());
         if(Objects.nonNull(existingParticipant) && participantDto.getUsername().equals(existingParticipant.getUsername())){
+            log.error("Username already exists: {}", existingParticipant.getUsername());
             throw new UserAlreadyExistsException("Username already exists");
         }
         Participant newParticipant = new Participant();

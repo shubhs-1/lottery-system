@@ -33,6 +33,6 @@ public class LotteryBallotController {
      */
     @PostMapping(value = "/submitLottery/{lotteryId}")
     public RestResponse submitLottery(@PathVariable("lotteryId") Long lotteryId, @RequestParam("username") String username) throws DataNotFoundException, LotteryStatusException {
-        return RestResponse.successBuild(lotteryService.submitLotteryBallot(lotteryId, username));
+        return RestResponse.successBuild(lotteryService.submitLotteryBallotSync(lotteryId, username));
     }
 }

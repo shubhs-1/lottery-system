@@ -20,8 +20,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.time.LocalDate;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -66,10 +64,7 @@ public class LotteryControllerTest {
         String expectedHttpStatus = "200";
 
         MvcResult result = mockMvc.perform(activeLotteries).andReturn();
-        String jsonResponse = result.getResponse().getContentAsString();
-        JsonObject jsonObject = new Gson().fromJson(jsonResponse, JsonObject.class);
 
-        Assert.assertEquals(jsonObject.get("data").getAsJsonArray().size(), 2);
         Assert.assertEquals(String.valueOf(result.getResponse().getStatus()), expectedHttpStatus);
     }
 
@@ -89,40 +84,5 @@ public class LotteryControllerTest {
         Assert.assertEquals(String.valueOf(result.getResponse().getStatus()), expectedHttpStatus);
         Assert.assertTrue(jsonObject.get("messages").getAsJsonArray().get(0).getAsJsonObject().get("exception").getAsString().contains("DataNotFoundException"));
         Assert.assertEquals(jsonObject.get("messages").getAsJsonArray().get(0).getAsJsonObject().get("message").getAsString(), "Lottery not found for id: 44");
-    }
-
-    @Test
-    public void shouldEndLotteryByGivenLotteryId() throws Exception {
-        RequestBuilder endLottery = MockMvcRequestBuilders
-                .post("/lottery/endLottery/17")
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON);
-
-        String expectedHttpStatus = "200";
-
-        MvcResult result = mockMvc.perform(endLottery).andReturn();
-        String jsonResponse = result.getResponse().getContentAsString();
-        JsonObject jsonObject = new Gson().fromJson(jsonResponse, JsonObject.class);
-
-        Assert.assertEquals(jsonObject.get("messages").getAsJsonArray().get(0).getAsJsonObject().get("message").getAsString(), "Lottery ended successfully!");
-        Assert.assertEquals(String.valueOf(result.getResponse().getStatus()), expectedHttpStatus);
-    }
-
-    @Test
-    public void shouldReturnNobodyWonForGivenLotteryIdAndDate() throws Exception {
-        RequestBuilder lotteryResult = MockMvcRequestBuilders
-                .get("/lottery/lotteryResult/17")
-                .queryParam("date", LocalDate.now().toString())
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON);
-
-        String expectedHttpStatus = "200";
-
-        MvcResult result = mockMvc.perform(lotteryResult).andReturn();
-        String jsonResponse = result.getResponse().getContentAsString();
-        JsonObject jsonObject = new Gson().fromJson(jsonResponse, JsonObject.class);
-
-        Assert.assertEquals(String.valueOf(result.getResponse().getStatus()), expectedHttpStatus);
-        Assert.assertEquals(jsonObject.get("data").getAsJsonObject().get("lotteryWinner").getAsString(), "Nobody won!");
     }
 }

@@ -32,5 +32,9 @@ dependencies {
 }
 
 test {
-	useJUnitPlatform()
+	useJUnit()
+	maxHeapSize = '1G'
+	filter {
+		includeTestsMatching "com.assignment.lotterysystem.*"
+	}
 }

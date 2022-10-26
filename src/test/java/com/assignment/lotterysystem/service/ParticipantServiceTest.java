@@ -67,8 +67,8 @@ public class ParticipantServiceTest {
     private ParticipantDto createUserDto(final String username) {
         ParticipantDto participantDto = new ParticipantDto();
         participantDto.setUsername(username);
-        participantDto.setFirstname("Merve");
-        participantDto.setLastname("Kaygisiz");
+        participantDto.setFirstname("john1");
+        participantDto.setLastname("doe1");
         return participantDto;
     }
 

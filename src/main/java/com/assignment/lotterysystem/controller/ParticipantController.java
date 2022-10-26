@@ -15,12 +15,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+/**
+ * @author Shubham Kalaria
+ * Controller to handle requests for participant related services
+ */
 @RestController
 public class ParticipantController {
 
     @Autowired
     ParticipantService participantService;
 
+    /**
+     * API endpoint for participant to register
+     * @param participantDto
+     * @param errors
+     * @return ResponseEntity
+     * @throws UserAlreadyExistsException
+     */
     @PostMapping("/register")
     public ResponseEntity<?> registerParticipant(@Valid @RequestBody ParticipantDto participantDto, Errors errors) throws UserAlreadyExistsException {
         if(errors.hasErrors()) {

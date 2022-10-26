@@ -12,6 +12,10 @@ import org.springframework.util.ObjectUtils;
 
 import java.util.Random;
 
+/**
+ * @author Shubham Kalaria
+ * Class to implement LotteryBallotService interface
+ */
 @Log4j2
 @Service
 public class LotteryBallotServiceImpl implements LotteryBallotService {
@@ -21,6 +25,12 @@ public class LotteryBallotServiceImpl implements LotteryBallotService {
     @Autowired
     private ParticipantService participantService;
 
+    /**
+     * Method to select random lottery number as winner for given lotteryId
+     * @param lotteryId
+     * @return Long
+     * @throws DataNotFoundException
+     */
     @Override
     public Long selectRandomLotteryWinner(Long lotteryId) throws DataNotFoundException {
         Long count = lotteryBallotRepository.countLotteryBallotByLotteryId(lotteryId);
@@ -37,6 +47,11 @@ public class LotteryBallotServiceImpl implements LotteryBallotService {
         return lotteryBallot.getLotteryNumber();
     }
 
+    /**
+     * Helper method to generate random number
+     * @param count
+     * @return long
+     */
     private long getRandom(Long count) {
         Random rand = new Random();
         return rand.nextInt(count.intValue()) + 1L;

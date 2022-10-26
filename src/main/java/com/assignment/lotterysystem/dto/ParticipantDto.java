@@ -8,6 +8,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
+/**
+ * @author Shubham Kalaria
+ * DTO class for representation of Participant
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -11,6 +11,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
+/**
+ * @author Shubham Kalaria
+ * Class to implement ParticipantService interface
+ */
 @Log4j2
 @Service
 public class ParticipantServiceImpl implements ParticipantService {
@@ -18,6 +22,12 @@ public class ParticipantServiceImpl implements ParticipantService {
     @Autowired
     ParticipantRepository participantRepository;
 
+    /**
+     * Method to provide registration service for participants
+     * @param participantDto
+     * @return Participant
+     * @throws UserAlreadyExistsException
+     */
     @Override
     public Participant registerParticipant(ParticipantDto participantDto) throws UserAlreadyExistsException {
         Participant existingParticipant = findParticipantByUsername(participantDto.getUsername());
@@ -31,6 +41,11 @@ public class ParticipantServiceImpl implements ParticipantService {
         return participantRepository.save(newParticipant);
     }
 
+    /**
+     * Method to find participant details by username
+     * @param username
+     * @return Participant
+     */
     @Override
     public Participant findParticipantByUsername(String username) {
         return participantRepository.findByUsername(username);

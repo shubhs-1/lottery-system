@@ -26,6 +26,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * @author Shubham Kalaria
+ * Class to implement LotteryService interface
+ */
 @Log4j2
 @Service
 public class LotteryServiceImpl implements LotteryService {
@@ -41,6 +45,12 @@ public class LotteryServiceImpl implements LotteryService {
     @Autowired
     private ParticipantService participantService;
 
+    /**
+     * Method to start lottery by given name
+     * @param lotteryName
+     * @return Lottery
+     * @throws SaveFailureException
+     */
     @Transactional
     @Override
     public Lottery startLotteryByName(String lotteryName) throws SaveFailureException {
@@ -52,6 +62,11 @@ public class LotteryServiceImpl implements LotteryService {
         return lotteryRepository.save(lottery);
     }
 
+    /**
+     * Method to check for active lotteries with given name
+     * @param lotteryName
+     * @throws SaveFailureException
+     */
     private void checkActiveLotteryWithSameName(String lotteryName) throws SaveFailureException {
         Long count = lotteryRepository.countByNameAndEndDateIsNull(lotteryName);
 
@@ -60,6 +75,12 @@ public class LotteryServiceImpl implements LotteryService {
         }
     }
 
+    /**
+     * Method to get lottery details by given lotteryId
+     * @param lotteryId
+     * @return Lottery
+     * @throws DataNotFoundException
+     */
     @Override
     public Lottery findByLotteryId(Long lotteryId) throws DataNotFoundException {
         Lottery lottery = lotteryRepository.findById(lotteryId);
@@ -69,6 +90,9 @@ public class LotteryServiceImpl implements LotteryService {
         return lottery;
     }
 
+    /**
+     * Method to end all active lotteries and randomly select winners
+     */
     @Override
     public void endAllActiveLotteriesAndSelectWinners() {
         List<Lottery> lotteries = getActiveLotteries();
@@ -81,11 +105,21 @@ public class LotteryServiceImpl implements LotteryService {
         });
     }
 
+    /**
+     * Method to get all active lotteries
+     * @return List<Lottery>
+     */
     @Override
     public List<Lottery> getActiveLotteries() {
         return lotteryRepository.findLotteriesByEndDateIsNull();
     }
 
+    /**
+     * Method to end lottery by given lotteryId and randomly select winner
+     * @param lotteryId
+     * @throws LotteryStatusException
+     * @throws DataNotFoundException
+     */
     @Transactional
     @Override
     public void endLotteryAndSelectLotteryWinner(Long lotteryId) throws LotteryStatusException, DataNotFoundException {
@@ -94,6 +128,12 @@ public class LotteryServiceImpl implements LotteryService {
         endLotteryAndSaveLotteryResult(lotteryId, winnerNumber);
     }
 
+    /**
+     * Helper method to end lottery and save the result
+     * @param lotteryId
+     * @param winnerLotteryNum
+     * @throws DataNotFoundException
+     */
     private void endLotteryAndSaveLotteryResult(Long lotteryId, Long winnerLotteryNum) throws DataNotFoundException {
         Lottery lottery = findByLotteryId(lotteryId);
         lottery.setLotteryWinner(winnerLotteryNum);
@@ -101,6 +141,14 @@ public class LotteryServiceImpl implements LotteryService {
         lotteryRepository.save(lottery);
     }
 
+    /**
+     * Method to get lottery result by given lotteryId and date
+     * @param lotteryId
+     * @param date
+     * @return LotteryDto
+     * @throws LotteryStatusException
+     * @throws DataNotFoundException
+     */
     @Override
     public LotteryDto getLotteryResultByLotteryIdAndDate(Long lotteryId, String date) throws LotteryStatusException, DataNotFoundException {
         checkLotteryIsActive(lotteryId);
@@ -116,6 +164,12 @@ public class LotteryServiceImpl implements LotteryService {
         return new LotteryDto(endDate, winner);
     }
 
+    /**
+     * Helper method to check if the lottery is active or finished for given lotteryID
+     * @param lotteryId
+     * @throws LotteryStatusException
+     * @throws DataNotFoundException
+     */
     private void checkLotteryIsFinished(Long lotteryId) throws LotteryStatusException, DataNotFoundException {
         Lottery lottery = findByLotteryId(lotteryId);
         if (!ObjectUtils.isEmpty(lottery.getEndDate())) {
@@ -123,6 +177,12 @@ public class LotteryServiceImpl implements LotteryService {
         }
     }
 
+    /**
+     * Helper method to check if the lottery is active for given lotteryId
+     * @param lotteryId
+     * @throws LotteryStatusException
+     * @throws DataNotFoundException
+     */
     private void checkLotteryIsActive(Long lotteryId) throws LotteryStatusException, DataNotFoundException {
         Lottery lottery = findByLotteryId(lotteryId);
         if (ObjectUtils.isEmpty(lottery.getEndDate())) {
@@ -130,6 +190,14 @@ public class LotteryServiceImpl implements LotteryService {
         }
     }
 
+    /**
+     * Thread safe method to submit lottery ballot by given lotteryId and username
+     * @param lotteryId
+     * @param username
+     * @return LotteryBallot
+     * @throws DataNotFoundException
+     * @throws LotteryStatusException
+     */
     @Override
     public synchronized LotteryBallot submitLotteryBallot(Long lotteryId, String username) throws DataNotFoundException, LotteryStatusException {
         checkLotteryIsFinished(lotteryId);
@@ -144,12 +212,22 @@ public class LotteryServiceImpl implements LotteryService {
         return lotteryBallot;
     }
 
+    /**
+     * Helper method to validate username
+     * @param username
+     * @throws DataNotFoundException
+     */
     private void validateUsername(String username) throws DataNotFoundException {
         if (ObjectUtils.isEmpty(username) || ObjectUtils.isEmpty(participantService.findParticipantByUsername(username))) {
             throw new DataNotFoundException("Username not found: " + username);
         }
     }
 
+    /**
+     * Helper method to generate next lottery number
+     * @param lotteryId
+     * @return
+     */
     private Long generateLotteryNumber(Long lotteryId) {
         LotteryBallot lotteryBallot = lotteryBallotRepository.findFirstByLotteryIdOrderByLotteryNumberDesc(lotteryId);
         return ObjectUtils.isEmpty(lotteryBallot) ? 1L : lotteryBallot.getLotteryNumber() + 1;

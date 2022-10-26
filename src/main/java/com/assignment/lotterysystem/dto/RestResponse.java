@@ -18,6 +18,10 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * @author Shubham Kalaria
+ * POJO class to centralise REST APIs response structure
+ */
 @Builder
 @Data
 @JsonDeserialize( builder = RestResponse.RestResponseBuilder.class )

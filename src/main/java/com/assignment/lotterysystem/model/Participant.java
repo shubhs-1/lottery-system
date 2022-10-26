@@ -12,6 +12,10 @@ import javax.persistence.Column;
 import javax.persistence.Table;
 import java.io.Serializable;
 
+/**
+ * @author Shubham Kalaria
+ * Participant entity class to communicate with database
+ */
 @Entity
 @Data
 @NoArgsConstructor

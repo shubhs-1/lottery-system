@@ -6,6 +6,10 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
+/**
+ * @author Shubham Kalaria
+ * DTO class for representation of Lottery
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

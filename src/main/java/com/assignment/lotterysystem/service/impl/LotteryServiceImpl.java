@@ -14,6 +14,7 @@ import com.assignment.lotterysystem.service.LotteryBallotService;
 import com.assignment.lotterysystem.service.ParticipantService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -106,6 +107,16 @@ public class LotteryServiceImpl implements LotteryService {
                 log.error("Lottery couldn't end for id: {}, error: {} ", lottery.getId(), e.getMessage());
             }
         });
+    }
+
+    /**
+     * Scheduled job which runs at 12:00 AM everyday to end all active lotteries
+     */
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void scheduledEnd() {
+        log.debug("[SCHEDULED-START] Scheduled execution to end all active lotteries started!");
+        endAllActiveLotteriesAndSelectWinners();
+        log.debug("[SCHEDULED-END] Scheduled execution ended!");
     }
 
     /**

@@ -27,10 +27,8 @@ public class LotteryController {
 
     /**
      * API endpoint to end all active lotteries
-     * Scheduled job which runs at 12:00 AM everyday
      * @return RestResponse
      */
-    @Scheduled(cron = "0 0 0 * * ?")
     @PostMapping("/endActiveLotteries")
     public RestResponse endActiveLotteries() {
         lotteryService.endAllActiveLotteriesAndSelectWinners();

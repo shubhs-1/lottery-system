@@ -1,9 +1,9 @@
 package com.assignment.lotterysystem.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.web.context.request.RequestAttributes;
@@ -23,7 +23,7 @@ import java.util.List;
  * POJO class to centralise REST APIs response structure
  */
 @Builder
-@Data
+@Getter
 @JsonDeserialize( builder = RestResponse.RestResponseBuilder.class )
 public class RestResponse implements Serializable {
     public static final boolean RESPONSE_FAILURE = false;
@@ -89,6 +89,9 @@ public class RestResponse implements Serializable {
          */
         private static final DateTimeFormatter DATE_TIME_FORMATTER = new DateTimeFormatterBuilder().appendPattern( "yyyy-MM-dd HH:mm:ss" ).toFormatter();
 
+        @JsonPOJOBuilder ( withPrefix = "" )
+        public static class MessageBuilder { }
+
         /**
          * Message builder with message and status
          */
@@ -133,6 +136,9 @@ public class RestResponse implements Serializable {
             return Strings.EMPTY;
         }
     }
+
+    @JsonPOJOBuilder( withPrefix = "" )
+    public static class RestResponseBuilder { }
 
     /**
      * Success ResponseBuilder with data.
